@@ -88,14 +88,41 @@ In `~/.claude/settings.json` (global, applies to all sessions):
 {
   "hooks": {
     "UserPromptSubmit": [{
-      "command": "date +%H%M",
-      "blocking": true
+      "matcher": "",
+      "hooks": [{ "type": "command", "command": "bash ~/dev/shutdown/clock.sh" }]
     }]
   }
 }
 ```
 
-One command, no script. The `/shutdown` and `/pickup` skill prompts read this output and reason about what to do.
+`clock.sh` outputs directive messages (⏰/📋) that Claude follows — bare timestamps get ignored.
+
+### Skill Registration (symlinks — DRY)
+
+Skills are defined once at `~/dev/shutdown/skills/` and symlinked into `~/.claude/skills/`:
+
+```
+~/.claude/skills/shutdown/SKILL.md → ~/dev/shutdown/skills/shutdown.md
+~/.claude/skills/pickup/SKILL.md  → ~/dev/shutdown/skills/pickup.md
+```
+
+This means editing the source in `~/dev/shutdown/skills/` updates all sessions. No duplication.
+
+### Permissions
+
+`~/.claude/settings.json` grants auto-approval for shutdown file operations:
+
+```json
+"permissions": {
+  "allow": [
+    "Read(/Users/kaiwenlin/dev/shutdown/**)",
+    "Write(/Users/kaiwenlin/dev/shutdown/**)",
+    "Edit(/Users/kaiwenlin/dev/shutdown/**)",
+    "Bash(mkdir -p /Users/kaiwenlin/dev/shutdown/*)",
+    "Bash(date +%H%M)", "Bash(date +%u)", "Bash(date +%Y-%m-%d)"
+  ]
+}
+```
 
 ---
 
