@@ -1,8 +1,7 @@
 {
-  "shutdownTime": "21:30",
-  "reminderLeadMinutes": 30,
-  "pickupTime": "09:00",
-  "timezone": "America/Los_Angeles",
+  "onTime": "0530",
+  "windDownTime": "2100",
+  "offTime": "2130",
   "inboxShorthands": {
     "!": "urgent",
     "B": "bug",

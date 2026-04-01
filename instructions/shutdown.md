@@ -5,14 +5,14 @@ Save this session's state for tomorrow's pickup.
 ## Steps
 
 1. Get today's date from the hook output (already in system-reminder as YYYY-MM-DD). No need to call `date`.
-2. Read `/Users/kaiwenlin/dev/shutdown/state/last-shutdown`
-3. List existing pickup files in `/Users/kaiwenlin/dev/shutdown/pickups/{today}/`
+2. Read `SHUTDOWN_HOME/state/last-shutdown`
+3. List existing pickup files in `SHUTDOWN_HOME/pickups/{today}/`
    - Derive a kebab-case short name for THIS session from its subject (e.g., `psm-identity-pivot`, `psm-shutdown-skill`, `reefnbid-cors-fix`)
    - If a file with the same short name already exists → already shut down. Skip to step 9.
    - Otherwise → write to `{short-name}.md`.
 4. Run `git status --short`, `git log --oneline -5`, `git branch --show-current`, `git stash list` — all in parallel
 5. Summarize the key context from THIS conversation — like `/compact`: what was discussed, decisions made, approaches tried, files touched, blockers discovered. This is the "conversation memory" for tomorrow.
-6. Write pickup file IMMEDIATELY to `/Users/kaiwenlin/dev/shutdown/pickups/{today}/{short-name}.md` — do NOT wait for user input:
+6. Write pickup file IMMEDIATELY to `SHUTDOWN_HOME/pickups/{today}/{short-name}.md` — do NOT wait for user input:
 
 ```markdown
 # Pickup — {short-name} — {date}
@@ -56,14 +56,26 @@ claude
 {what was in-flight, what's next, what to do first}
 ```
 
-7. Read existing index.md (if any), append this session's entry, write back to `/Users/kaiwenlin/dev/shutdown/pickups/{today}/index.md`
-8. Use the Write tool to write the date+time from the hook output (e.g. `2026-03-30T22:45`) to `/Users/kaiwenlin/dev/shutdown/state/last-shutdown`. No extra `date` call needed.
-9. Print:
+7. Read existing index.md (if any), append this session's entry, write back to `SHUTDOWN_HOME/pickups/{today}/index.md`
+8. Read existing `SHUTDOWN_HOME/pickups/{today}/life.md` (if any). Ask: "Any life tasks? (errands, deadlines, reminders — or 'none')"
+   - If user provides life tasks OR life.md already exists with incomplete items → write/update `SHUTDOWN_HOME/pickups/{today}/life.md`:
+   ```markdown
+   # Life Tasks — {date}
+
+   ## Active
+   - [ ] {task} — {deadline if known}
+
+   ## Completed today
+   - [x] {any completed items}
+   ```
+   - Carry forward incomplete items from the previous day's life.md (find latest date dir before today)
+9. Use the Write tool to write the date+time from the hook output (e.g. `2026-03-30T22:45`) to `SHUTDOWN_HOME/state/last-shutdown`. No extra `date` call needed.
+10. Print:
 
 ```
 Schedule shutdown, complete. ({short-name})
 
-Pickup file saved. Any last notes for tomorrow? Life tasks?
+Pickup file saved. Any last notes for tomorrow?
 If nothing, type exit to close this session.
 
 💡 When you exit, note the session ID for resume:

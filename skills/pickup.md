@@ -5,4 +5,4 @@ user_invocable: true
 args: "[repo-slug]"
 ---
 
-Read `/Users/kaiwenlin/dev/shutdown/instructions/pickup.md` and follow it step by step.
+Read `SHUTDOWN_HOME/instructions/pickup.md` and follow it step by step.
