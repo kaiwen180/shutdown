@@ -10,7 +10,7 @@ Save this session's state for tomorrow's pickup.
    - Derive a kebab-case short name for THIS session from its subject (e.g., `psm-identity-pivot`, `psm-shutdown-skill`, `reefnbid-cors-fix`)
    - If a file with the same short name already exists → already shut down. Skip to step 9.
    - Otherwise → write to `{short-name}.md`.
-4. Run `git status --short`, `git log --oneline -5`, `git branch --show-current`, `git stash list` — all in parallel
+4. Run `git status --short`, `git log --oneline -5`, `git branch --show-current`, `git stash list`, `git worktree list` — all in parallel
 5. Summarize the key context from THIS conversation — like `/compact`: what was discussed, decisions made, approaches tried, files touched, blockers discovered. This is the "conversation memory" for tomorrow.
 6. Write pickup file IMMEDIATELY to `SHUTDOWN_HOME/pickups/{today}/{short-name}.md` — do NOT wait for user input:
 
@@ -42,6 +42,17 @@ claude
 - Uncommitted: {file list}
 - Last commit: {hash} "{message}"
 - Stash: {list or none}
+
+## Worktree
+{Only include this section if `git worktree list` shows more than one entry.}
+{This section captures machine-local state — different machines may have different worktrees.}
+- **Role**: main worktree | child worktree of {main worktree path}
+- **This path**: {pwd}
+- **Branch**: {branch}
+- **All worktrees** (from `git worktree list`):
+  - {path} {branch} — {purpose if known from conversation context}
+- **Disposition of this worktree**: keep / prune-after-merge / prune-now
+{Disposition only applies to child worktrees. Main worktree is always "permanent".}
 
 ## Tasks
 {checklist of in-progress items from THIS session}

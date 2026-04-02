@@ -31,6 +31,18 @@ Read `life.md` from the latest pickup directory. Show active items with deadline
 Items past their deadline → mark as **overdue**.
 Incomplete items carry forward automatically — they'll appear in tonight's shutdown.
 
+### Worktree topology
+
+After loading all pickup files, check for any that have a `## Worktree` section. If found:
+- Run `git worktree list` from the current repo to detect what actually exists on THIS machine
+- Cross-reference with pickup files:
+  - Pickup mentions a worktree path that exists → show it (with disposition from pickup)
+  - Pickup mentions a worktree path that doesn't exist → mark as "(not on this machine)" — skip prune suggestions
+  - `git worktree list` shows a worktree with no matching pickup file → flag as "untracked worktree, investigate"
+- Group sessions by parent repo (show tree structure)
+- Flag worktrees marked `prune-now` that exist on this machine → suggest `git worktree remove {path}` + `git branch -d {branch}`
+- Worktree state is machine-local; pickup files may reference paths from a different machine — never assume a path exists without checking
+
 ### Selective resurrection
 
 For each session, present summary and ask: **[R]esume / [D]iscard / [L]ater**
